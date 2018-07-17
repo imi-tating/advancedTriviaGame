@@ -1,6 +1,5 @@
 // "#countdown-timer"
 // "#trivia-questions"
-
 var countdown;
 var countdownTimer;
 var allTriviaQuestions = [{
@@ -39,10 +38,9 @@ var correctAnswers;
 var inCorrectAnswers;
 var unAnswered;
 var currentQuestionNumber = allTriviaQuestions.length;
-var testQuestion = allTriviaQuestions[0];
 
 
-//changing createQuestion to generic: format question (creates single question at a time)
+//creates single question at a time
 function formatQuestion(questionToBeFormated) {
   var question =
   `<div class="card mx-auto mb-4" style="width: 80%">
@@ -89,7 +87,7 @@ function formatQuestion(questionToBeFormated) {
   return question;
 }
 
-//NOT USED CURRENTLY
+//creates answer for previously created single question
 function formatAnswer(answerToBeFormated) {
   var answer =
   `<div class="card mx-auto mb-4" style="width: 80%">
@@ -103,7 +101,7 @@ function formatAnswer(answerToBeFormated) {
   return answer;
 }
 
-//changing checkAnswers to generic: checkAnswer (checks single question/answer at a time)
+//changing checkAnswers to generic: checkAnswer (checks single q/a at a time)
 function checkAnswer(questionAnswerToBeChecked) {
     if (!$('input[name=radio-question]').is(':checked')) {
       unAnswered++;
@@ -138,12 +136,12 @@ function triviaQuestions() {
   startCountDown(triviaAnswers);
   currentQuestionNumber--;
 
-  $("#trivia-questions").html(formatQuestion(testQuestion));
+  $("#trivia-questions").html(formatQuestion(allTriviaQuestions[currentQuestionNumber]));
 
   $(".footer").html('<p>Trivia Questions were sourced from: <a href="http://www.petcarefoundation.org/trivia.asp">petcarefoundation.com</a> and <a href="https://www.care.com/c/stories/6045/101-amazing-cat-facts-fun-trivia-about-your-feline-friend/">care.com</a></p>');
 }
 
-//leads to: triviaAnswers or triviaQuestions depending upon callback
+//leads to: triviaAnswers or triviaQuestions depending upon callback given
 function startCountDown(callThisLater) {
    countdown--;
    $("#timer").html(countdown);
@@ -161,10 +159,11 @@ function startCountDown(callThisLater) {
 function triviaAnswers() {
   countdown = 4;
   $("#countdown-timer").empty();
-  $("#trivia-questions").html(checkAnswer(testQuestion)).append(formatAnswer(testQuestion));
+  $("#trivia-questions").html(checkAnswer(allTriviaQuestions[currentQuestionNumber])).append(formatAnswer(allTriviaQuestions[currentQuestionNumber]));
   continueOrEnd();
 }
 
+//either calls triviaQuestions() or finalTally()
 function continueOrEnd() {
   if (currentQuestionNumber > 0) {
     startCountDown(triviaQuestions);
@@ -173,7 +172,7 @@ function continueOrEnd() {
   }
 }
 
-
+//shows final score and offers play again button
 function finalTally() {
   $("#countdown-timer").empty();
   $("#trivia-questions").html("<h3>Alright, let's see how you did!</h3>").append('<p>Correct Answers: ' + correctAnswers + '<br>Incorrect Answers: ' + inCorrectAnswers + '<br>Unanswered: ' + unAnswered + '</p>');
@@ -182,7 +181,6 @@ function finalTally() {
 }
 
 $(document).ready(function(){
-
   triviaStart();
 
 });
