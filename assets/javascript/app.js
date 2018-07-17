@@ -3,11 +3,11 @@
 var countdown;
 var countdownTimer;
 var allTriviaQuestions = [{
-  question: "A cat has how many rows of whiskers?",
-  correctAnswer: "four",
-  option01: "two",
-  option02: "three",
-  option03: "four"
+  question: "About how many miles per hour can a cat sprint?",
+  correctAnswer: "31",
+  option01: "8",
+  option02: "15",
+  option03: "31"
 }, {
   question: "A cat will spend nearly what percentage of its life grooming itself?",
   correctAnswer: "30%",
@@ -15,11 +15,17 @@ var allTriviaQuestions = [{
   option02: "30%",
   option03: "40%"
 }, {
-  question: "With the exception of polydactyl cats, cats are supposed to have how many toes?",
-  correctAnswer: "18 toes",
-  option01: "10 toes",
-  option02: "18 toes",
-  option03: "20 toes"
+  question: "Cats grow whiskers on more than just their muzzle.<br>Which of the following is NOT a place cats grow whiskers?",
+  correctAnswer: "tail",
+  option01: "tail",
+  option02: "ears",
+  option03: "forelegs"
+}, {
+  question: "Humans have 206 bones in their body, how many do cats have?",
+  correctAnswer: "230",
+  option01: "200",
+  option02: "206",
+  option03: "230"
 }, {
   question: "Cats move both of their right feet first, then move both of their left feet.<br>Only two other animals walk this way. Which of the following is NOT one of them?",
   correctAnswer: "elephants",
@@ -27,18 +33,41 @@ var allTriviaQuestions = [{
   option02: "camels",
   option03: "giraffes"
 }, {
+  question: "How far can a cat's ear pivot?",
+  correctAnswer: "180º",
+  option01: "120º",
+  option02: "180º",
+  option03: "240º"
+}, {
   question: "Cats can jump up to how many times their length?",
   correctAnswer: "six",
   option01: "three",
   option02: "four",
   option03: "six"
+}, {
+  question: "Every cat has a unique _____ print?",
+  correctAnswer: "nose",
+  option01: "nose",
+  option02: "paw",
+  option03: "pattern"
+}, {
+  question: "With the exception of polydactyl cats, cats are supposed to have how many toes?",
+  correctAnswer: "18 toes",
+  option01: "10 toes",
+  option02: "18 toes",
+  option03: "20 toes"
+}, {
+  question: "A cat has how many rows of whiskers on either side of their muzzle?",
+  correctAnswer: "four",
+  option01: "two",
+  option02: "three",
+  option03: "four"
 }];
 
 var correctAnswers;
 var inCorrectAnswers;
 var unAnswered;
 var currentQuestionNumber = allTriviaQuestions.length;
-
 
 //creates single question at a time
 function formatQuestion(questionToBeFormated) {
@@ -131,7 +160,7 @@ function triviaStart() {
 
 //calls startCountDown();
 function triviaQuestions() {
-  countdown = 6;
+  countdown = 10;
   $("#countdown-timer").html("<p>Time Remaining: <span id='timer'>" + countdown + "</span> seconds.</p>");
   startCountDown(triviaAnswers);
   currentQuestionNumber--;
@@ -157,7 +186,7 @@ function startCountDown(callThisLater) {
 
 //clears countdownTimer + updates html with answer to single trivia question
 function triviaAnswers() {
-  countdown = 4;
+  countdown = 5;
   $("#countdown-timer").empty();
   $("#trivia-questions").html(checkAnswer(allTriviaQuestions[currentQuestionNumber])).append(formatAnswer(allTriviaQuestions[currentQuestionNumber]));
   continueOrEnd();
