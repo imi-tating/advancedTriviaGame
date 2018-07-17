@@ -38,10 +38,11 @@ var allTriviaQuestions = [{
 var correctAnswers;
 var inCorrectAnswers;
 var unAnswered;
-
+var currentQuestionNumber = allTriviaQuestions.length;
 var testQuestion = allTriviaQuestions[0];
 
-//changing createQuestion to generic: format question
+
+//changing createQuestion to generic: format question (creates single question at a time)
 function formatQuestion(questionToBeFormated) {
   var question =
   `<div class="card mx-auto mb-4" style="width: 80%">
@@ -83,72 +84,97 @@ function formatQuestion(questionToBeFormated) {
           ${questionToBeFormated.option03}
         </label>
       </li>
-
     </ul>
   </div>`;
-
   return question;
 }
 
 //NOT USED CURRENTLY
-function createAnswer() {
-  var answer = "";
-  for (var i = 0; i < allTriviaQuestions.length; i++) {
-    answer += '<div class="card mx-auto mb-4" style="width: 80%"><h5 class="card-header">' + allTriviaQuestions[i].question + '</h5><ul class="list-group list-group-flush"><li class="list-group-item form-check"><label class="form-check-label">' + allTriviaQuestions[i].correctAnswer + '</label></li></ul></div>';
-  }
+function formatAnswer(answerToBeFormated) {
+  var answer =
+  `<div class="card mx-auto mb-4" style="width: 80%">
+    <h5 class="card-header">${answerToBeFormated.question}</h5>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item form-check">
+        <label class="form-check-label">${answerToBeFormated.correctAnswer}</label>
+      </li>
+    </ul>
+  </div>`;
   return answer;
 }
 
-function checkAnswers() {
-  for (var i = 0; i < allTriviaQuestions.length; i++) {
-    var currentRadioName = "questionRadios-" + i;
-    if (!$('input[name=' + currentRadioName + ']').is(':checked')) {
+//changing checkAnswers to generic: checkAnswer (checks single question/answer at a time)
+function checkAnswer(questionAnswerToBeChecked) {
+    if (!$('input[name=radio-question]').is(':checked')) {
       unAnswered++;
+      return '<p class="answer-checked">You failed to select an answer!<br>(which is worse than selecting the incorrect answer)</p><br><h4 class="lead">The correct answer was:</h4>';
     } else {
-      if ($('input[name=' + currentRadioName + ']:checked').val() === allTriviaQuestions[i].correctAnswer) {
+      if ($('input[name=radio-question]:checked').val() === questionAnswerToBeChecked.correctAnswer) {
         correctAnswers++;
+        return '<p class="answer-checked">You\'re so smart.<br>You selected the correct answer!</p><br>';
       } else {
         inCorrectAnswers++;
+        return '<p class="answer-checked">Opps!<br>You selected the incorrect answer.</p><br><h4 class="lead">The correct answer was:</h4>';
       }
     }
-  }
 }
 
 //starts/resets game - leads to: triviaQuestions()
 function triviaStart() {
   $("#countdown-timer").empty();
   $(".footer").empty();
-  countdown = 5;
   correctAnswers = 0;
   inCorrectAnswers = 0;
   unAnswered = 0;
   $("#trivia-questions").html("<h3>Welcome! Welcome! Welcome!</h3>").append("<p>In this More Advanced Trivia Game, Ellie will present you with a single question at a time. <br> You will be given a set amount of time to answer that question. Once you have either selected an answer, or time runs out, you will shown the correct answer before moving on to the next question. <br> Are you ready to play?</p>");
-  $("#trivia-questions").append("<button id='button-trivia-start' class='btn btn-success'>Start</button>");
+  $("#trivia-questions").append("<button id='button-trivia-start' class='btn btn-info'>Start</button>");
   $("#button-trivia-start").click(triviaQuestions);
 }
 
+//calls startCountDown();
 function triviaQuestions() {
+  countdown = 6;
   $("#countdown-timer").html("<p>Time Remaining: <span id='timer'>" + countdown + "</span> seconds.</p>");
-  startCountDown();
+  startCountDown(triviaAnswers);
+  currentQuestionNumber--;
 
   $("#trivia-questions").html(formatQuestion(testQuestion));
 
   $(".footer").html('<p>Trivia Questions were sourced from: <a href="http://www.petcarefoundation.org/trivia.asp">petcarefoundation.com</a> and <a href="https://www.care.com/c/stories/6045/101-amazing-cat-facts-fun-trivia-about-your-feline-friend/">care.com</a></p>');
 }
 
-function startCountDown() {
+//leads to: triviaAnswers or triviaQuestions depending upon callback
+function startCountDown(callThisLater) {
    countdown--;
    $("#timer").html(countdown);
-   countdownTimer = setTimeout(startCountDown, 1000);
+   countdownTimer = setTimeout(function () {
+    startCountDown(callThisLater)
+   }, 1000);
 
    if (countdown === 0) {
      clearTimeout(countdownTimer);
-     triviaAnswers();
+     callThisLater();
    }
 }
 
+//clears countdownTimer + updates html with answer to single trivia question
 function triviaAnswers() {
-  checkAnswers();
+  countdown = 4;
+  $("#countdown-timer").empty();
+  $("#trivia-questions").html(checkAnswer(testQuestion)).append(formatAnswer(testQuestion));
+  continueOrEnd();
+}
+
+function continueOrEnd() {
+  if (currentQuestionNumber > 0) {
+    startCountDown(triviaQuestions);
+  } else {
+    finalTally();
+  }
+}
+
+
+function finalTally() {
   $("#countdown-timer").empty();
   $("#trivia-questions").html("<h3>Alright, let's see how you did!</h3>").append('<p>Correct Answers: ' + correctAnswers + '<br>Incorrect Answers: ' + inCorrectAnswers + '<br>Unanswered: ' + unAnswered + '</p>');
   $("#trivia-questions").append("<button id='button-trivia-play-again' class='btn btn-success'>Play Again</button>");
@@ -156,6 +182,7 @@ function triviaAnswers() {
 }
 
 $(document).ready(function(){
+
   triviaStart();
 
 });

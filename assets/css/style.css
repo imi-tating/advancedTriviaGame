@@ -1,3 +1,7 @@
 h3 {
   line-height: 2em;
 }
+
+.answer-checked {
+  font-size: 1.5em;
+}
