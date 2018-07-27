@@ -1,3 +1,12 @@
+.jumbotron {
+  padding-bottom: 1px;
+}
+
+#ellie-jOliver {
+  max-width: 13rem;
+  margin-bottom: 0;
+}
+
 h3 {
   line-height: 2em;
 }
